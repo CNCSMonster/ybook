@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>$title$</title>
+    <script src="/blog/vue.js"></script>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 120%;
+        }
+
+        .search-bar {
+            top: 50px;
+            position: fixed;
+            height: 50px;
+            width: 60%;
+            left: 50%;
+            transform: translateX(-50%);
+
+            display: flex;
+            flex: 1;
+            flex-basis: 10%;
+            border-bottom: 1px solid #ccc;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-input {
+            flex: 0 0 60%;
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .search-button {
+            flex: 0 0 auto;
+            margin-left: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .search-type {
+            flex: 0 0 auto;
+            margin-left: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .search-number {
+            flex: 0 0 auto;
+            margin-left: 10px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .content {
+            margin-top: 100px;
+            flex: 9;
+            padding: 10px;
+            overflow-y: auto;
+        }
+    </style>
+    <style>
+        html {
+            font-size: 100%;
+            overflow-y: scroll;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+
+        pre {
+            border: 1px solid #060404;
+            padding: 10px;
+            border-radius: 1px;
+            background-color: #F5F5F5;
+        }
+
+        body {
+            color: #444;
+            font-family: Georgia, Palatino, ‘Palatino Linotype‘, Times, ‘Times New Roman‘, serif;
+            font-size: 12px;
+            line-height: 1.7;
+            padding: 1em;
+            margin: auto;
+            max-width: 42em;
+            background: #fefefe;
+        }
+
+        a {
+            color: #0645ad;
+            text-decoration: none;
+        }
+
+        a:visited {
+            color: #0b0080;
+        }
+
+        a:hover {
+            color: #06e;
+        }
+
+        a:active {
+            color: #faa700;
+        }
+
+        a:focus {
+            outline: thin dotted;
+        }
+
+        *::-moz-selection {
+            background: rgba(255, 255, 0, 0.3);
+            color: #000;
+        }
+
+        *::selection {
+            background: rgba(255, 255, 0, 0.3);
+            color: #000;
+        }
+
+        a::-moz-selection {
+            background: rgba(255, 255, 0, 0.3);
+            color: #0645ad;
+        }
+
+        a::selection {
+            background: rgba(255, 255, 0, 0.3);
+            color: #0645ad;
+        }
+
+        p {
+            margin: 1em 0;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            color: #111;
+            line-height: 125%;
+            margin-top: 2em;
+            font-weight: normal;
+        }
+
+        h4,
+        h5,
+        h6 {
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 2.5em;
+        }
+
+        h2 {
+            font-size: 2em;
+        }
+
+        h3 {
+            font-size: 1.5em;
+        }
+
+        h4 {
+            font-size: 1.2em;
+        }
+
+        h5 {
+            font-size: 1em;
+        }
+
+        h6 {
+            font-size: 0.9em;
+        }
+
+        blockquote {
+            color: #666666;
+            margin: 0;
+            padding-left: 3em;
+            border-left: 0.5em #EEE solid;
+        }
+
+        hr {
+            display: block;
+            height: 2px;
+            border: 0;
+            border-top: 1px solid #aaa;
+            border-bottom: 1px solid #eee;
+            margin: 1em 0;
+            padding: 0;
+        }
+
+        pre,
+        code,
+        kbd,
+        samp {
+            color: #000;
+            font-family: monospace, monospace;
+            _font-family: ‘courier new‘, monospace;
+            font-size: 0.98em;
+        }
+
+        pre {
+            white-space: pre;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        b,
+        strong {
+            font-weight: bold;
+        }
+
+        dfn {
+            font-style: italic;
+        }
+
+        ins {
+            background: #ff9;
+            color: #000;
+            text-decoration: none;
+        }
+
+        mark {
+            background: #ff0;
+            color: #000;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        sub,
+        sup {
+            font-size: 75%;
+            line-height: 0;
+            position: relative;
+            vertical-align: baseline;
+        }
+
+        sup {
+            top: -0.5em;
+        }
+
+        sub {
+            bottom: -0.25em;
+        }
+
+        ul,
+        ol {
+            margin: 1em 0;
+            padding: 0 0 0 2em;
+        }
+
+        li p:last-child {
+            margin-bottom: 0;
+        }
+
+        ul ul,
+        ol ol {
+            margin: .3em 0;
+        }
+
+        dl {
+            margin-bottom: 1em;
+        }
+
+        dt {
+            font-weight: bold;
+            margin-bottom: .8em;
+        }
+
+        dd {
+            margin: 0 0 .8em 2em;
+        }
+
+        dd:last-child {
+            margin-bottom: 0;
+        }
+
+        img {
+            border: 0;
+            -ms-interpolation-mode: bicubic;
+            vertical-align: middle;
+        }
+
+        figure {
+            display: block;
+            text-align: center;
+            margin: 1em 0;
+        }
+
+        figure img {
+            border: none;
+            margin: 0 auto;
+        }
+
+        figcaption {
+            font-size: 0.8em;
+            font-style: italic;
+            margin: 0 0 .8em;
+        }
+
+        table {
+            margin-bottom: 2em;
+            border-bottom: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+        table th {
+            padding: .2em 1em;
+            background-color: #eee;
+            border-top: 1px solid #ddd;
+            border-left: 1px solid #ddd;
+        }
+
+        table td {
+            padding: .2em 1em;
+            border-top: 1px solid #ddd;
+            border-left: 1px solid #ddd;
+            vertical-align: top;
+        }
+
+        .author {
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        @media only screen and (min-width: 480px) {
+            body {
+                font-size: 14px;
+            }
+        }
+
+        @media only screen and (min-width: 768px) {
+            body {
+                font-size: 16px;
+            }
+        }
+
+        @media print {
+            * {
+                background: transparent !important;
+                color: black !important;
+                filter: none !important;
+                -ms-filter: none !important;
+            }
+
+            body {
+                font-size: 12pt;
+                max-width: 100%;
+            }
+
+            a,
+            a:visited {
+                text-decoration: underline;
+            }
+
+            hr {
+                height: 1px;
+                border: 0;
+                border-bottom: 1px solid black;
+            }
+
+            a[href]:after {
+                content: " (" attr(href) ")";
+            }
+
+            abbr[title]:after {
+                content: " (" attr(title) ")";
+            }
+
+            .ir a:after,
+            a[href^="javascript:"]:after,
+            a[href^="#"]:after {
+                content: "";
+            }
+
+            pre,
+            blockquote {
+                border: 1px solid #999;
+                padding-right: 1em;
+                page-break-inside: avoid;
+            }
+
+            tr,
+            img {
+                page-break-inside: avoid;
+            }
+
+            img {
+                max-width: 100% !important;
+            }
+
+            @page :left {
+                margin: 15mm 20mm 15mm 10mm;
+            }
+
+            @page :right {
+                margin: 15mm 10mm 15mm 20mm;
+            }
+
+            p,
+            h2,
+            h3 {
+                orphans: 3;
+                widows: 3;
+            }
+
+            h2,
+            h3 {
+                page-break-after: avoid;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <div class="search-bar">
+                <input class="search-input" v-model="keyword" type="text" placeholder="请输入关键词"
+                    @keydown.enter="performSearch">
+                <button class="search-button" @click="performSearch">Search</button>
+                <select class="search-type" v-model="searchType" @change="savePreference">
+                    <!-- 使用v-for指令实现 -->
+                    <option v-for="searcher in searchers" :key="searcher.type" :value="searcher.type">
+                        {{ searcher.brief }}
+                    </option>
+                    <!-- <option value="keyword">关键词搜索</option>
+          <option value="title" >基于标题的文本距离搜索</option>
+          <option value="content">文章内容匹配搜索</option> -->
+                </select>
+                <input class="search-number" type="number" v-model="searchNum" id="quantity" name="quantity" min="1"
+                    max="100">
+            </div>
+            <div class="content">
+                <div v-if="isLoading">Loading...</div>
+                <div v-if="isBase"> $toc$ <br><br> $body$</div>
+                <div v-else v-html="content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    keyword: '',
+                    isLoading: false,
+                    isBase: true,
+                    content: '',
+                    searchNum: localStorage.getItem('searchNum') || 10,
+                    searchType: localStorage.getItem('searchType') || 'title',
+                    searchers: JSON.parse(localStorage.getItem('searchers')) || []
+                };
+            },
+            created() {
+                if (!localStorage.getItem('searchers')) {
+                    this.fetchSearchers();
+                }
+                this.searchersRefreshIntervalId = setInterval(this.fetchSearchers, 10000);
+            },
+            beforeUnmount() {
+                clearInterval(this.searchersRefreshIntervalId);
+            },
+            methods: {
+                fetchSearchers() {
+                    return fetch("/api/searchers")
+                        .then(response => response.json())  // 首先解析JSON
+                        .then(data => {
+                            // 数据解析成功后，将其存储到localStorage
+                            localStorage.setItem('searchers', JSON.stringify(data));
+                            // 然后将数据赋值给this.searchers
+                            this.searchers = data;
+                        })
+                        .catch(error => {
+                            console.error('搜索请求失败:', error);
+                        });
+                },
+                performSearch() {
+                    this.isLoading = true;
+                    this.isBase = false;
+
+                    // 构造搜索请求的 URL
+                    const keyword = this.keyword;
+                    const url = "/api/search?keyword=" + encodeURIComponent(keyword) + "&searchType=" + this.searchType + "&num=" + this.searchNum;
+                    console.log(url);
+                    // 加入搜索类型参数 searchtype
+                    // 发送网络请求获取链接数组的 JSON 响应
+                    Promise.race([
+                        fetch(url),
+                        new Promise((resolve, reject) => {
+                            setTimeout(() => reject(new Error('请求超时')), 5000)
+                        })
+                    ])
+                        .then(response => response.json())
+                        .then(data => {
+                            this.content = this.generateLinkList(data);
+                            this.isLoading = false;
+                        })
+                        .catch(error => {
+                            console.error('搜索请求失败:', error);
+                            this.isLoading = false;
+                        });
+                }
+                ,
+                generateLinkList(linkArray) {
+                    let html = '<ul>';
+                    for (let i = 0; i < linkArray.length; i++) {
+                        const url = linkArray[i]
+                        html += "<li><a href=\"" + url + "\">" + url + "</a></li>";
+                    }
+                    html += '</ul>';
+                    return html;
+                }
+                ,
+                savePreference() {
+                    localStorage.setItem('searchType', this.searchType);
+                }
+            },
+            watch: {
+                // 每当searchNum改变时，都将其保存到localStorage
+                searchNum(newVal) {
+                    localStorage.setItem('searchNum', newVal);
+                }
+            }
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+
+</html>

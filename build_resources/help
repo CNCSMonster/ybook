@@ -1,0 +1,29 @@
+yb: a dynamic mdbook focus on searching functionality
+
+dependencies:
+1. install pandoc and add it into environments
+```
+# on windows
+scoop install pandoc
+# on Ubuntu
+sudo apt update && sudo apt install pandoc
+```
+
+flags:
+-h: print help message
+-s: start server
+-n: create a new blog structure in current directory
+-v: print version
+
+Usage:
+yb -h
+yb -s
+yb -n
+yb -v
+
+quick start:
+```sh
+yb -n
+yb -s
+```
+then visit http://localhost:8080/blog/

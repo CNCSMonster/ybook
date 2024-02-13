@@ -1,0 +1,42 @@
+port = 7777
+blog_path = "./blog"
+gen_path = "./gen"
+not_gen = true
+hide_paths = [
+"*.js",
+"*.ico",
+"blog/hide.md",
+]
+template_path = "./template.html"
+app_data_path = "~/.eb"
+search_num = 13
+[[search_plugins]]
+name = "keyword"
+brief = "关键词搜索"
+type = "command"
+disable = true
+
+[[search_plugins]]
+name = "content"
+brief = "内容搜索"
+type = "command"
+disable = true
+
+[[search_plugins]]
+name = "fzf_fd"
+brief = "使用fzf+fd搜索"
+type = "command"
+command = "fd . ${BLOG_PATH} | fzf -f ${KEY_WORD} | head -n ${NUM}"
+
+[[search_plugins]]
+name = "rip_content"
+brief = "使用ripgrep匹配文件内容搜索"
+type = "command"
+command = "rg ${KEY_WORD} ${BLOG_PATH} -l| head -n ${NUM}"
+
+[[search_plugins]]
+name = "rip_fd_path"
+brief = "使用ripgrep+fd针对文件路径搜索"
+type = "command"
+command = "fd . ${BLOG_PATH} | rg ${KEY_WORD} | head -n ${NUM}"
+
