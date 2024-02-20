@@ -55,12 +55,7 @@ func BlogCacheMiddleware(blogCache pkg.Cache, config *pkg.Config) gin.HandlerFun
 		config.RUnlock()
 		path = pkg.SimplifyPath(path)
 		blogI, found := blogCache.Get(path)
-		var contentType string
-		if strings.HasSuffix(c.Request.URL.Path, ".png") || strings.HasSuffix(c.Request.URL.Path, ".jpg") || strings.HasSuffix(c.Request.URL.Path, ".jpeg") {
-			contentType = fmt.Sprintf("image/%s", filepath.Ext(c.Request.URL.Path)[1:])
-		} else {
-			contentType = "text/html; charset=utf-8"
-		}
+		contentType := ContentType(path)
 		if found {
 			log.Println("[cache] hit:", path)
 			blog := blogI.(*pkg.BlogItem)
@@ -86,7 +81,7 @@ func LoadBlogMiddleware(blogCache pkg.Cache, blogLoader *pkg.BlogLoader) func(c 
 		}
 		blogCache.Set(filePath, blog)
 		file := []byte(blog.Html)
-		c.Data(http.StatusOK, "text/html; charset=utf-8", file)
+		c.Data(http.StatusOK, ContentType(url), file)
 	}
 }
 
@@ -206,4 +201,16 @@ func SearchMiddleWare(searchers *sync.Map, cache pkg.Cache, config *pkg.Config) 
 		}
 		c.JSON(http.StatusOK, retResults)
 	}
+}
+
+func ContentType(url string) string {
+	var contentType string
+	if strings.HasSuffix(url, ".png") || strings.HasSuffix(url, ".jpg") || strings.HasSuffix(url, ".jpeg") {
+		contentType = fmt.Sprintf("image/%s", filepath.Ext(url)[1:])
+	} else if strings.HasSuffix(url, ".css") {
+		contentType = "text/css; charset=utf-8"
+	} else {
+		contentType = "text/html; charset=utf-8"
+	}
+	return contentType
 }
